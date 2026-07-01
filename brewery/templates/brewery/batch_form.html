@@ -1,21 +1,68 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block content %}
 
 <h2>Новая партия</h2>
 
-<form method="post">
+<form method='post'>
 
     {% csrf_token %}
 
-    {{ form.as_p }}
+    <div class='mb-3'>
+        {{ form.name.label_tag }}
+        {{ form.name }}
+        {{ form.name.errors }}
+    </div>
 
-    <button
-        class="btn btn-primary">
+    <div class='row'>
 
-        Создать
+        <div class='col-md-6'>
+            {{ form.brew_date.label_tag }}
+            {{ form.brew_date }}
+            {{ form.brew_date.errors }}
+        </div>
 
-    </button>
+        <div class='col-md-6'>
+            {{ form.volume.label_tag }}
+            {{ form.volume }}
+            {{ form.volume.errors }}
+        </div>
+
+    </div>
+
+    <div class='mt-3'>
+        {{ form.recipe.label_tag }}
+        {{ form.recipe }}
+        {{ form.recipe.errors }}
+    </div>
+
+    <div class='mt-3'>
+        {{ form.notes.label_tag }}
+        {{ form.notes }}
+        {{ form.notes.errors }}
+    </div>
+
+    <div class='mt-4 d-flex gap-2'>
+
+        <button
+            class='btn btn-success'
+            type='submit'>
+
+            Создать
+
+        </button>
+
+        <a
+        href="{% url 'batch_list' %}"
+        class='btn btn-outline-secondary'>
+
+        Отмена
+
+        </a>
+
+    </div>
+
+    
 
 </form>
 

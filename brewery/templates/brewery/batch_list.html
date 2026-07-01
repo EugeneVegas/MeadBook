@@ -6,7 +6,21 @@ MeadBook
 
 {% block content %}
 
-<h1>Партии</h1>
+<div class='d-flex justify-content-between align-items-center mb-3'>
+
+    <h2 class='mb-0'>
+        Партии
+    </h2>
+
+    <a
+        href="{% url 'batch_create' %}"
+        class='btn btn-primary'>
+
+        + Новая партия
+
+    </a>
+
+</div>
 
 {% for batch in batches %}
 
@@ -23,5 +37,6 @@ MeadBook
 Пока ничего нет.
 
 {% endfor %}
+
 
 {% endblock %}

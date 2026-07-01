@@ -5,13 +5,13 @@ from .models import Batch
 from .forms import BatchForm
 
 
-def index(request):
+def batch_list(request):
 
     batches = Batch.objects.all()
 
     return render(
         request,
-        'brewery/index.html',
+        'brewery/batch_list.html',
         {
             'batches': batches,
         },
@@ -20,7 +20,7 @@ def index(request):
 
 def batch_create(request):
 
-    if request.method == "POST":
+    if request.method == 'POST':
 
         form = BatchForm(request.POST)
 
@@ -28,7 +28,7 @@ def batch_create(request):
 
             form.save()
 
-            return redirect("index")
+            return redirect('index')
 
     else:
 
@@ -36,8 +36,8 @@ def batch_create(request):
 
     return render(
         request,
-        "brewery/batch_form.html",
+        'brewery/batch_form.html',
         {
-            "form": form,
+            'form': form,
         },
     )
