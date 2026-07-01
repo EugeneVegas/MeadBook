@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}
+MeadBook
+{% endblock %}
+
+{% block content %}
+
+<h1>Партии</h1>
+
+{% for batch in batches %}
+
+<div>
+
+    <h3>{{ batch.name }}</h3>
+
+    {{ batch.brew_date }}
+
+</div>
+
+{% empty %}
+
+Пока ничего нет.
+
+{% endfor %}
+
+{% endblock %}
