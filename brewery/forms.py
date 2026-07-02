@@ -3,6 +3,10 @@ from django import forms
 from .models import Batch
 
 
+class DatePickerInput(forms.DateInput):
+    input_type = 'date'
+
+
 class BatchForm(forms.ModelForm):
 
     class Meta:
@@ -17,36 +21,23 @@ class BatchForm(forms.ModelForm):
         )
 
         widgets = {
-            'name': forms.TextInput(
+            'brew_date': DatePickerInput(
                 attrs={
                     'class': 'form-control',
-                }
-            ),
-
-            'brew_date': forms.DateInput(
-                attrs={
-                    'class': 'form-control',
-                    'type': 'date',
-                }
-            ),
-
-            'volume': forms.NumberInput(
-                attrs={
-                    'class': 'form-control',
-                }
-            ),
-
-            'recipe': forms.Textarea(
-                attrs={
-                    'class': 'form-control',
-                    'rows': 5,
-                }
-            ),
-
-            'notes': forms.Textarea(
-                attrs={
-                    'class': 'form-control',
-                    'rows': 4,
-                }
+                },
             ),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field in self.fields.values():
+            field.widget.attrs.setdefault('class', 'form-control')
+
+        self.fields['recipe'].widget.attrs.update({
+            'rows': 6,
+        })
+
+        self.fields['notes'].widget.attrs.update({
+            'rows': 4,
+        })
