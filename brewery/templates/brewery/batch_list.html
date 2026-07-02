@@ -4,12 +4,10 @@
 
 <div class='d-flex justify-content-between align-items-center mb-3'>
     <h2 class='mb-0'>
-        Партии
+        Batches
     </h2>
-    <a href="{% url 'batch_create' %}"
-        class='btn btn-primary'>
-
-        + Новая партия
+    <a href="{% url 'batch_create' %}" class='btn btn-primary'>
+        + New batch
     </a>
 </div>
 
@@ -19,8 +17,7 @@
 
 {% for batch in batches %}
 
-<a href="{% url 'batch_detail' batch.pk %}"
-    class="list-group-item list-group-item-action">
+<a href="{% url 'batch_detail' batch.pk %}" class="list-group-item list-group-item-action">
     <strong>
         {{ batch.name }}
     </strong>
@@ -37,9 +34,7 @@
 {% else %}
 
 <div class="alert alert-info">
-
-Пока нет ни одной партии.
-
+    No batches yet...
 </div>
 
 {% endif %}

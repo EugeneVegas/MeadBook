@@ -1,39 +1,135 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class='container py-4'>
+    <div class='row g-4'>
+        <div class='col-12'>
+            <div class='card'>
+                <div class='card-header'>
+                    <h3 class='mb-0'>
+                        🍯 {{ batch.name }}
+                    </h3>
+                </div>
+                <div class='card-body'>
+                    Created {{ batch.created_at }}
+                </div>
+            </div>
+        </div>
+        <div class='col-lg-8'>
+            <div class='card h-100'>
+                <div class='card-header'>Batch Information</div>
+                <div class='card-body'>
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Brew date
+                        </div>
+                        <div class='fw-semibold'>
+                            {{ batch.brew_date }}
+                        </div>
+                    </div>
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Volume
+                        </div>
+                        <div class='fw-semibold'>
+                            {{ batch.volume }} L
+                        </div>
+                    </div>
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Recipe
+                        </div>
+                        <div class='fw-semibold'>
+                            {{ batch.recipe|linebreaks }}
+                        </div>
+                    </div>
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Notes
+                        </div>
+                        <div>
+                            {{ batch.notes|linebreaks }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class='col-lg-4'>
+            <div class='card h-100'>
+                <div class='card-header'>Status</div>
+                <div class='card-body'>
+                    <div class='mb-3'>
+                        🟢 Fermenting
+                    </div>
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Age:
+                        </div>
+                        <div>
+                            X days
+                        </div>
+                    </div>
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Bottles:
+                        </div>
+                        <div>
+                            0
+                        </div>
+                    </div>
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Last gravity:
+                        </div>
+                        <div>
+                            --
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class='col-12'>
+            <div class='card'>
+                <div class='card-header'>
+                    Measurements
+                </div>
+                <div class='card-body'>
+                    No measurements yet...
+                </div>
+            </div>
+        </div>
+        <div class='col-12'>
+            <div class='card'>
+                <div class='card-header'>
+                    Bottles
+                </div>
+                <div class='card-body'>
+                    No bottles yet...
+                </div>
+            </div>
+        </div>
+        <div class='col-12'>
+            <div class='card'>
+                <div class='card-header'>
+                    History
+                </div>
+                <div class='card-body'>
+                    No history yet...
+                </div>
+            </div>
+        </div>
+        <div class='col'>
+            <div class='d-flex gap-2'>
+                <a href="#" class='btn btn-outline-secondary'>
+                    Edit
+                </a>
 
-<h2>{{ batch.name }}</h2>
-
-<table class='table'>
-
-    <tr>
-        <th>Дата</th>
-        <td>{{ batch.brew_date }}</td>
-    </tr>
-
-    <tr>
-        <th>Объем</th>
-        <td>{{ batch.volume }} л</td>
-    </tr>
-
-    <tr>
-        <th>Рецепт</th>
-        <td>{{ batch.recipe|linebreaks }}</td>
-    </tr>
-
-    <tr>
-        <th>Заметки</th>
-        <td>{{ batch.notes|linebreaks }}</td>
-    </tr>
-
-</table>
-
-<a
-    href="{% url 'batch_list' %}"
-    class='btn btn-outline-secondary'>
-
-    Назад
-
-</a>
-
+                <a href="{% url 'batch_list' %}" class='btn btn-outline-secondary'>
+                    Back
+                </a>
+            </div>
+        </div>
+    </div>
+    
+</div>
 {% endblock %}

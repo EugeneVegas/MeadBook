@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<h2>Новая партия</h2>
+<h2>New batch</h2>
 
 <form method='post'>
 
@@ -43,27 +43,13 @@
     </div>
 
     <div class='mt-4 d-flex gap-2'>
-
-        <button
-            class='btn btn-success'
-            type='submit'>
-
-            Создать
-
+        <button class='btn btn-success' type='submit'>
+            Add new
         </button>
 
-        <a
-        href="{% url 'batch_list' %}"
-        class='btn btn-outline-secondary'>
-
-        Отмена
-
+        <a href="{% url 'batch_list' %}" class='btn btn-outline-secondary'>
+            Cancel
         </a>
-
     </div>
-
-    
-
 </form>
-
 {% endblock %}
