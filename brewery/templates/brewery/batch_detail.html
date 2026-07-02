@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>{{ batch.name }}</h2>
+
+<table class='table'>
+
+    <tr>
+        <th>Дата</th>
+        <td>{{ batch.brew_date }}</td>
+    </tr>
+
+    <tr>
+        <th>Объем</th>
+        <td>{{ batch.volume }} л</td>
+    </tr>
+
+    <tr>
+        <th>Рецепт</th>
+        <td>{{ batch.recipe|linebreaks }}</td>
+    </tr>
+
+    <tr>
+        <th>Заметки</th>
+        <td>{{ batch.notes|linebreaks }}</td>
+    </tr>
+
+</table>
+
+<a
+    href="{% url 'batch_list' %}"
+    class='btn btn-outline-secondary'>
+
+    Назад
+
+</a>
+
+{% endblock %}

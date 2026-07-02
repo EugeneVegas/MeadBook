@@ -3,6 +3,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.batch_list, name='batch_list'),
-    path('batch/new/', views.batch_create, name='batch_create'),
+    path('', views.BatchListView.as_view(), name='batch_list'),
+    path('batch/<int:pk>/', views.BatchDetailView.as_view(),
+         name='batch_detail'),
+    path('batch/new/', views.BatchCreateView.as_view(), name='batch_create'),
 ]
