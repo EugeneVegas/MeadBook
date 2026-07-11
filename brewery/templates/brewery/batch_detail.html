@@ -82,7 +82,13 @@
                             Last gravity:
                         </div>
                         <div>
-                            --
+                            {% with last_measurement=batch.measurements.first  %}
+                            {% if last_measurement %}
+                                {{ last_measurement.gravity }}
+                            {% else %}
+                                --
+                            {% endif %}
+                            {% endwith %}
                         </div>
                     </div>
                 </div>
@@ -94,13 +100,15 @@
                     Measurements
                 </div>
                 <div class='card-body'>
-                {% for measurement in batch.measurements.all %}
+                    {% with measurements=batch.measurements.all %}
+                    {% if measurements %}
+                    {% for measurement in measurements %}
                     <div class='mb-3'>
                         <div class='text-muted small'>
                             Measured at:
                         </div>
                         <div>
-                            {{ measurement.measured_at }}
+                            {{ measurement.measured_at|date:'d.m.Y H:i' }}
                         </div>
                     </div>
                     <div class='mb-3'>
@@ -130,7 +138,11 @@
                     {% if not forloop.last %}
                         <hr>
                     {% endif %}
-                {% endfor %}
+                    {% endfor %}
+                    {%else%}
+                        No measurements yet...
+                    {% endif %}
+                    {% endwith %}
                 </div>
             </div>
         </div>
