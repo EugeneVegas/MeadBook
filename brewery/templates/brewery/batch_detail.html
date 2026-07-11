@@ -82,13 +82,11 @@
                             Last gravity:
                         </div>
                         <div>
-                            {% with last_measurement=batch.measurements.first  %}
-                            {% if last_measurement %}
-                                {{ last_measurement.gravity }}
+                            {% if batch.current_gravity %}
+                                {{ batch.current_gravity }}
                             {% else %}
                                 --
                             {% endif %}
-                            {% endwith %}
                         </div>
                     </div>
                 </div>

@@ -22,6 +22,32 @@ class Batch(models.Model):
     def __str__(self) -> str:
         return self.name
 
+    @property
+    def measurement_count(self):
+        return self.measurements.count()
+
+    @property
+    def latest_measurement(self):
+        return self.measurements.first()
+
+    @property
+    def earliest_measurement(self):
+        return self.measurements.last()
+
+    @property
+    def current_gravity(self):
+        measurement = self.latest_measurement
+        if measurement is None:
+            return None
+        return measurement.gravity
+
+    @property
+    def original_gravity(self):
+        measurement = self.earliest_measurement
+        if measurement is None:
+            return None
+        return measurement.gravity
+
 
 class Measurement(models.Model):
     batch = models.ForeignKey(
@@ -44,3 +70,10 @@ class Measurement(models.Model):
         verbose_name = 'Measurement'
         verbose_name_plural = 'Measurements'
         ordering = ['-measured_at']
+
+    def __str__(self):
+        return (
+            f'{self.batch.name}: '
+            f'{self.gravity} '
+            f'({self.measured_at:%d.%m.%Y})'
+        )
