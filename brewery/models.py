@@ -21,3 +21,26 @@ class Batch(models.Model):
 
     def __str__(self) -> str:
         return self.name
+
+
+class Measurement(models.Model):
+    batch = models.ForeignKey(
+        Batch,
+        on_delete=models.CASCADE,
+        related_name='measurements',
+    )
+    measured_at = models.DateTimeField()
+    gravity = models.DecimalField(
+        max_digits=5,
+        decimal_places=3,
+    )
+    temperature = models.DecimalField(
+        max_digits=3,
+        decimal_places=1,
+    )
+    notes = models.TextField()
+
+    class Meta:
+        verbose_name = 'Measurement'
+        verbose_name_plural = 'Measurements'
+        ordering = ['-measured_at']
