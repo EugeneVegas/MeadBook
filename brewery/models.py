@@ -38,7 +38,7 @@ class Measurement(models.Model):
         max_digits=3,
         decimal_places=1,
     )
-    notes = models.TextField()
+    notes = models.TextField(blank=True)
 
     class Meta:
         verbose_name = 'Measurement'
