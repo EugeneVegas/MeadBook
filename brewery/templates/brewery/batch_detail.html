@@ -94,7 +94,43 @@
                     Measurements
                 </div>
                 <div class='card-body'>
-                    No measurements yet...
+                {% for measurement in batch.measurements.all %}
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Measured at:
+                        </div>
+                        <div>
+                            {{ measurement.measured_at }}
+                        </div>
+                    </div>
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Specific gravity:
+                        </div>
+                        <div>
+                            {{ measurement.gravity }}
+                        </div>
+                    </div>
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Temperature:
+                        </div>
+                        <div>
+                            {{ measurement.temperature }}
+                        </div>
+                    </div>
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Notes:
+                        </div>
+                        <div>
+                            {{ measurement.notes }}
+                        </div>
+                    </div>
+                    {% if not forloop.last %}
+                        <hr>
+                    {% endif %}
+                {% endfor %}
                 </div>
             </div>
         </div>
