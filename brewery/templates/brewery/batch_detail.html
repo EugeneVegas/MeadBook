@@ -102,7 +102,7 @@
                 <div class='card-body'>
                     {% with measurements=batch.measurements.all %}
                     {% if measurements %}
-                    {% for measurement in measurements %}
+                    {% for measurement in measurements|slice:':3' %}
                     <div class='mb-3'>
                         <div class='text-muted small'>
                             Measured at:
@@ -143,6 +143,9 @@
                         No measurements yet...
                     {% endif %}
                     {% endwith %}
+                    <a href="{% url 'measurement_create' batch.pk %}" class='btn btn-primary'>
+                        + New measurement
+                    </a>
                 </div>
             </div>
         </div>
