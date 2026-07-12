@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class='container py-4'>
+
+    <div class='row justify-content-center'>
+        <div class='col-lg-6'>
+
+            <div class='card border-danger'>
+
+                <div class='card-header bg-danger text-white'>
+                    <h4 class='mb-0'>
+                        🗑 Delete measurement
+                    </h4>
+                </div>
+
+                <div class='card-body'>
+
+                    <p class='text-muted'>
+                        You are about to permanently delete this measurement.
+                    </p>
+
+                    <hr>
+
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Batch
+                        </div>
+                        <div class='fw-semibold'>
+                            🍯 {{ object.batch.name }}
+                        </div>
+                    </div>
+
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Date
+                        </div>
+                        <div class='fw-semibold'>
+                            {{ object.measured_at|date:'d.m.Y H:i' }}
+                        </div>
+                    </div>
+
+                    <div class='row mb-3'>
+
+                        <div class='col-6'>
+                            <div class='text-muted small'>
+                                Gravity
+                            </div>
+
+                            <div class='fw-semibold'>
+                                {{ object.gravity }}
+                            </div>
+                        </div>
+
+                        <div class='col-6'>
+                            <div class='text-muted small'>
+                                Temperature
+                            </div>
+
+                            <div class='fw-semibold'>
+                                {{ object.temperature }} °C
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {% if object.notes %}
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Notes
+                        </div>
+
+                        <div>
+                            {{ object.notes|linebreaks }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class='alert alert-warning mb-4'>
+                        <strong>Warning!</strong><br>
+                        This action cannot be undone.
+                    </div>
+
+                    <form method='post'>
+                        {% csrf_token %}
+
+                        <div class='d-flex justify-content-end gap-2'>
+
+                            <a href="{% url 'batch_detail' object.batch.pk %}"
+                               class='btn btn-outline-secondary'>
+                                Cancel
+                            </a>
+
+                            <button type='submit'
+                                    class='btn btn-danger'>
+                                Delete measurement
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}

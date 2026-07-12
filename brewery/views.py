@@ -5,6 +5,7 @@ from django.views.generic import (
     DetailView,
     CreateView,
     UpdateView,
+    DeleteView,
 )
 
 from .models import Batch, Measurement
@@ -67,3 +68,12 @@ class MeasurementUpdateView(MeasurementSuccessUrlMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['batch'] = self.object.batch
         return context
+
+
+class MeasurementDeleteView(DeleteView):
+    model = Measurement
+    template_name = 'brewery/measurement/confirm_delete.html'
+
+    def get_success_url(self) -> str:
+        return reverse_lazy('batch_detail',
+                            kwargs={'pk': self.object.batch.pk})

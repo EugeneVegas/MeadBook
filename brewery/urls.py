@@ -13,4 +13,7 @@ urlpatterns = [
     path('measurement/<int:pk>/edit/',
          views.MeasurementUpdateView.as_view(),
          name='measurement_update'),
+    path('measurement/<int:pk>/delete/',
+         views.MeasurementDeleteView.as_view(),
+         name='measurement_delete'),
 ]
