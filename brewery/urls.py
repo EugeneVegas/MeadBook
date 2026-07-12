@@ -19,4 +19,7 @@ urlpatterns = [
     path('batch/<int:pk>/measurements/',
          views.MeasurementListView.as_view(),
          name='measurement_list'),
+    path('batch/<int:pk>/label/',
+         views.BatchLabelView.as_view(),
+         name='batch_label'),
 ]

@@ -12,6 +12,24 @@ from .models import Batch, Measurement
 
 from .forms import BatchForm, MeasurementForm
 
+from .utils import qr
+
+
+class BatchLabelView(DetailView):
+    model = Batch
+    template_name = 'brewery/batch/label.html'
+    context_object_name = 'batch'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        batch = self.get_object()
+        absolute_url = reverse_lazy('batch_detail', kwargs={'pk': batch.pk},)
+        context['qr_code'] = qr.make_qr(
+            self.request.build_absolute_uri(absolute_url))
+
+        return context
+
 
 class BatchListView(ListView):
     model = Batch
