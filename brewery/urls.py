@@ -22,4 +22,6 @@ urlpatterns = [
     path('batch/<int:pk>/label/',
          views.BatchLabelView.as_view(),
          name='batch_label'),
+    path('batch/<int:pk>/edit/', views.BatchUpdateView.as_view(),
+         name='batch_update'),
 ]

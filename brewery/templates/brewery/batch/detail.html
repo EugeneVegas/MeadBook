@@ -10,7 +10,7 @@
     {% include 'brewery/batch/partials/_history_card.html' %}
     <div class='col-12'>
         <div class='d-flex gap-2'>
-            <a href="#" class='btn btn-outline-secondary'>
+            <a href="{% url 'batch_update' batch.pk %}" class='btn btn-outline-secondary'>
                 Edit
             </a>
 

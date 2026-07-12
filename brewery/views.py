@@ -50,6 +50,16 @@ class BatchCreateView(CreateView):
     success_url = reverse_lazy('batch_list')
 
 
+class BatchUpdateView(UpdateView):
+    model = Batch
+    form_class = BatchForm
+    template_name = 'brewery/batch/form.html'
+
+    def get_success_url(self) -> str:
+        return reverse_lazy('batch_detail',
+                            kwargs={'pk': self.object.pk})
+
+
 class MeasurementSuccessUrlMixin:
     def get_success_url(self) -> str:
         return reverse_lazy('batch_detail',
