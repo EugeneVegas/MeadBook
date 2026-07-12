@@ -74,11 +74,7 @@
                             Original Gravity:
                         </div>
                         <div>
-                            {% if batch.measurement_count > 0 %}
-                                {{ batch.original_gravity }}
-                            {% else %}
-                                --
-                            {% endif %}
+                            {{ batch.original_gravity|default_if_none:"--" }}
                         </div>
                     </div>
                     <div class='mb-3'>
@@ -86,11 +82,7 @@
                             Current Gravity:
                         </div>
                         <div>
-                            {% if batch.measurement_count > 0 %}
-                                {{ batch.current_gravity }}
-                            {% else %}
-                                --
-                            {% endif %}
+                            {{ batch.current_gravity|default_if_none:"--" }}
                         </div>
                     </div>
                     <div class='mb-3'>
@@ -98,11 +90,7 @@
                             Gravity drop:
                         </div>
                         <div>
-                            {% if batch.measurement_count > 0 %}
-                                {{ batch.gravity_drop }}
-                            {% else %}
-                                --
-                            {% endif %}
+                            {{ batch.gravity_drop|default_if_none:"--" }}
                         </div>
                     </div>
                     <div class='mb-3'>
@@ -122,9 +110,8 @@
                     Measurements
                 </div>
                 <div class='card-body'>
-                    {% with measurements=batch.measurements.all %}
-                    {% if measurements %}
-                    {% for measurement in measurements|slice:':3' %}
+                    {% if batch.recent_measurements %}
+                    {% for measurement in batch.recent_measurements %}
                     <div class='mb-3'>
                         <div class='text-muted small'>
                             Measured at:
@@ -164,7 +151,6 @@
                     {%else%}
                         No measurements yet...
                     {% endif %}
-                    {% endwith %}
                     <a href="{% url 'measurement_create' batch.pk %}" class='btn btn-primary'>
                         + New measurement
                     </a>
