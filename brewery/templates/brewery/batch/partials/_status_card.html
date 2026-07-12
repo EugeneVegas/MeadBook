@@ -1,0 +1,50 @@
+<div class='col-lg-4'>
+    <div class='card h-100'>
+        <div class='card-header'>Status</div>
+        <div class='card-body'>
+            <div class='mb-3'>
+                {{ batch.status }}
+            </div>
+            <div class='mb-3'>
+                <div class='text-muted small'>
+                    Age:
+                </div>
+                <div>
+                    {{ batch.age_days }} days
+                </div>
+            </div>
+            <div class='mb-3'>
+                <div class='text-muted small'>
+                    Original Gravity:
+                </div>
+                <div>
+                    {{ batch.original_gravity|default_if_none:"--" }}
+                </div>
+            </div>
+            <div class='mb-3'>
+                <div class='text-muted small'>
+                    Current Gravity:
+                </div>
+                <div>
+                    {{ batch.current_gravity|default_if_none:"--" }}
+                </div>
+            </div>
+            <div class='mb-3'>
+                <div class='text-muted small'>
+                    Gravity drop:
+                </div>
+                <div>
+                    {{ batch.gravity_drop|default_if_none:"--" }}
+                </div>
+            </div>
+            <div class='mb-3'>
+                <div class='text-muted small'>
+                    Bottles:
+                </div>
+                <div>
+                    0
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+<div class='col-12'>
+    <div class='card'>
+        <div class='card-header'>
+            <a href="#" class="link-body-emphasis link-underline-opacity-0">
+                Measurements
+            </a>
+        </div>
+        <div class='card-body'>
+            {% if batch.recent_measurements %}
+            {% for measurement in batch.recent_measurements %}
+            <div class='mb-3'>
+                <div class='text-muted small'>
+                    Measured at:
+                </div>
+                <div>
+                    {{ measurement.measured_at|date:'d.m.Y H:i' }}
+                </div>
+            </div>
+            <div class='mb-3'>
+                <div class='text-muted small'>
+                    Specific gravity:
+                </div>
+                <div>
+                    {{ measurement.gravity }}
+                </div>
+            </div>
+            <div class='mb-3'>
+                <div class='text-muted small'>
+                    Temperature:
+                </div>
+                <div>
+                    {{ measurement.temperature }}
+                </div>
+            </div>
+            <div class='mb-3'>
+                <div class='text-muted small'>
+                    Notes:
+                </div>
+                <div>
+                    {{ measurement.notes }}
+                </div>
+            </div>
+            {% if not forloop.last %}
+                <hr>
+            {% endif %}
+            {% endfor %}
+            {%else%}
+                No measurements yet...
+            {% endif %}
+            <a href="{% url 'measurement_create' batch.pk %}" class='btn btn-primary'>
+                + New measurement
+            </a>
+        </div>
+    </div>
+</div>

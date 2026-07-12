@@ -76,7 +76,7 @@ class Batch(models.Model):
         start_date = self.brew_date
         delta = timezone.localdate() - start_date
 
-        return delta.days
+        return max(delta.days, 0)
 
     @property
     def status(self):
