@@ -16,4 +16,7 @@ urlpatterns = [
     path('measurement/<int:pk>/delete/',
          views.MeasurementDeleteView.as_view(),
          name='measurement_delete'),
+    path('batch/<int:pk>/measurements/',
+         views.MeasurementListView.as_view(),
+         name='measurement_list'),
 ]

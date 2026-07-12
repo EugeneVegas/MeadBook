@@ -11,8 +11,7 @@
                 <small class='text-muted'>
                     {{ batch.measurement_count }} measurements
                     •
-                    <a href="#"
-                       class='text-decoration-none'>
+                    <a href="{% url 'measurement_list' batch.pk %}" class='text-decoration-none'>
                         View all
                     </a>
                 </small>

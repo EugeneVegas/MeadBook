@@ -77,3 +77,26 @@ class MeasurementDeleteView(DeleteView):
     def get_success_url(self) -> str:
         return reverse_lazy('batch_detail',
                             kwargs={'pk': self.object.batch.pk})
+
+
+class MeasurementListView(ListView):
+    model = Measurement
+    template_name = 'brewery/measurement/list.html'
+    context_object_name = 'measurements'
+
+    def get_queryset(self):
+        return get_object_or_404(
+            Batch,
+            pk=self.kwargs['pk'],
+        ).measurements.all()
+
+    def get_batch(self):
+        return get_object_or_404(
+            Batch,
+            pk=self.kwargs['pk'],
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['batch'] = self.get_batch()
+        return context

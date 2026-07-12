@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class='container py-4'>
+
+    <div class='row g-4'>
+
+        <div class='col-12'>
+            <div class='card'>
+
+                <div class='card-header'>
+                    <div class='d-flex justify-content-between align-items-center'>
+
+                        <div>
+                            <h3 class='mb-0'>
+                                🧪 Measurements
+                            </h3>
+
+                            <small class='text-muted'>
+                                Batch:
+                                <a href="{% url 'batch_detail' batch.pk %}"
+                                   class='text-decoration-none'>
+                                    🍯 {{ batch.name }}
+                                </a>
+                            </small>
+                        </div>
+
+                        <a href="{% url 'measurement_create' batch.pk %}"
+                           class='btn btn-primary'>
+                            + New measurement
+                        </a>
+
+                    </div>
+                </div>
+
+                <div class='card-body p-0'>
+
+                    {% if measurements %}
+
+                    <table class='table table-hover align-middle mb-0'>
+
+                        <thead class='table-light'>
+                            <tr>
+                                <th>Date</th>
+                                <th>Gravity</th>
+                                <th>Temperature</th>
+                                <th>Notes</th>
+                                <th class='text-end'>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for measurement in measurements %}
+
+                            <tr>
+
+                                <td>
+                                    {{ measurement.measured_at|date:'d.m.Y H:i' }}
+                                </td>
+
+                                <td>
+                                    <span class='fw-semibold'>
+                                        {{ measurement.gravity }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    {{ measurement.temperature }} °C
+                                </td>
+
+                                <td>
+
+                                    {% if measurement.notes %}
+
+                                        {{ measurement.notes|truncatechars:60 }}
+
+                                    {% else %}
+
+                                        <span class='text-muted'>
+                                            —
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                                <td class='text-end'>
+
+                                    <div class='btn-group btn-group-sm'>
+
+                                        <a href="{% url 'measurement_update' measurement.pk %}"
+                                           class='btn btn-outline-secondary'>
+                                            Edit
+                                        </a>
+
+                                        <a href="{% url 'measurement_delete' measurement.pk %}"
+                                           class='btn btn-outline-danger'>
+                                            Delete
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                    {% else %}
+
+                    <div class='p-4 text-center'>
+
+                        <p class='text-muted mb-3'>
+                            No measurements yet.
+                        </p>
+
+                        <a href="{% url 'measurement_create' batch.pk %}"
+                           class='btn btn-primary'>
+                            Add first measurement
+                        </a>
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+                <div class='card-footer'>
+
+                    <a href="{% url 'batch_detail' batch.pk %}"
+                       class='btn btn-outline-secondary'>
+                        ← Back to batch
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
