@@ -59,14 +59,50 @@
                 <div class='card-header'>Status</div>
                 <div class='card-body'>
                     <div class='mb-3'>
-                        🟢 Fermenting
+                        {{ batch.status }}
                     </div>
                     <div class='mb-3'>
                         <div class='text-muted small'>
                             Age:
                         </div>
                         <div>
-                            X days
+                            {{ batch.age_days }} days
+                        </div>
+                    </div>
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Original Gravity:
+                        </div>
+                        <div>
+                            {% if batch.measurement_count > 0 %}
+                                {{ batch.original_gravity }}
+                            {% else %}
+                                --
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Current Gravity:
+                        </div>
+                        <div>
+                            {% if batch.measurement_count > 0 %}
+                                {{ batch.current_gravity }}
+                            {% else %}
+                                --
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class='mb-3'>
+                        <div class='text-muted small'>
+                            Gravity drop:
+                        </div>
+                        <div>
+                            {% if batch.measurement_count > 0 %}
+                                {{ batch.gravity_drop }}
+                            {% else %}
+                                --
+                            {% endif %}
                         </div>
                     </div>
                     <div class='mb-3'>
@@ -75,18 +111,6 @@
                         </div>
                         <div>
                             0
-                        </div>
-                    </div>
-                    <div class='mb-3'>
-                        <div class='text-muted small'>
-                            Last gravity:
-                        </div>
-                        <div>
-                            {% if batch.current_gravity %}
-                                {{ batch.current_gravity }}
-                            {% else %}
-                                --
-                            {% endif %}
                         </div>
                     </div>
                 </div>

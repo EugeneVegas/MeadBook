@@ -1,4 +1,13 @@
 from django.db import models
+from enum import StrEnum
+from django.utils import timezone
+from decimal import Decimal
+
+
+class BatchStatus(StrEnum):
+    NO_MEASUREMENTS = "⚪ No measurements"
+    FERMENTING = "🟢 Fermenting"
+    CONDITIONING = "🟡 Conditioning"
 
 
 class Batch(models.Model):
@@ -35,6 +44,10 @@ class Batch(models.Model):
         return self.measurements.last()
 
     @property
+    def recent_measurements(self):
+        return self.measurements.all()[:3]
+
+    @property
     def current_gravity(self):
         measurement = self.latest_measurement
         if measurement is None:
@@ -47,6 +60,31 @@ class Batch(models.Model):
         if measurement is None:
             return None
         return measurement.gravity
+
+    @property
+    def gravity_drop(self):
+        og = self.original_gravity
+        cg = self.current_gravity
+
+        if og is None or cg is None:
+            return None
+
+        return og - cg
+
+    @property
+    def age_days(self):
+        start_date = self.brew_date
+        delta = timezone.localdate() - start_date
+
+        return delta.days
+
+    @property
+    def status(self):
+        if self.current_gravity is None:
+            return BatchStatus.NO_MEASUREMENTS
+        if self.current_gravity > Decimal('1.020'):
+            return BatchStatus.FERMENTING
+        return BatchStatus.CONDITIONING
 
 
 class Measurement(models.Model):
