@@ -1,55 +1,108 @@
 <div class='col-12'>
     <div class='card'>
-        <div class='card-header'>
-            <a href="#" class="link-body-emphasis link-underline-opacity-0">
-                Measurements
+    <div class='card-header'>
+        <div class='d-flex justify-content-between align-items-center'>
+
+            <div>
+                <h5 class='mb-0'>
+                    Measurements
+                </h5>
+
+                <small class='text-muted'>
+                    {{ batch.measurement_count }} measurements
+                    •
+                    <a href="#"
+                       class='text-decoration-none'>
+                        View all
+                    </a>
+                </small>
+            </div>
+
+            <a href="{% url 'measurement_create' batch.pk %}"
+               class='btn btn-sm btn-primary'>
+                + New
             </a>
-        </div>
-        <div class='card-body'>
-            {% if batch.recent_measurements %}
-            {% for measurement in batch.recent_measurements %}
-            <div class='mb-3'>
-                <div class='text-muted small'>
-                    Measured at:
-                </div>
-                <div>
-                    {{ measurement.measured_at|date:'d.m.Y H:i' }}
-                </div>
-            </div>
-            <div class='mb-3'>
-                <div class='text-muted small'>
-                    Specific gravity:
-                </div>
-                <div>
-                    {{ measurement.gravity }}
-                </div>
-            </div>
-            <div class='mb-3'>
-                <div class='text-muted small'>
-                    Temperature:
-                </div>
-                <div>
-                    {{ measurement.temperature }}
-                </div>
-            </div>
-            <div class='mb-3'>
-                <div class='text-muted small'>
-                    Notes:
-                </div>
-                <div>
-                    {{ measurement.notes }}
-                </div>
-            </div>
-            {% if not forloop.last %}
-                <hr>
-            {% endif %}
-            {% endfor %}
-            {%else%}
-                No measurements yet...
-            {% endif %}
-            <a href="{% url 'measurement_create' batch.pk %}" class='btn btn-primary'>
-                + New measurement
-            </a>
+
         </div>
     </div>
+
+    <div class='card-body'>
+
+        {% if batch.recent_measurements %}
+
+            {% for measurement in batch.recent_measurements %}
+
+                <div class='border rounded p-3 mb-3'>
+
+                    <div class='d-flex justify-content-between align-items-start mb-2'>
+
+                        <div>
+                            <div class='fw-semibold'>
+                                {{ measurement.measured_at|date:'d.m.Y H:i' }}
+                            </div>
+
+                            <small class='text-muted'>
+                                Measurement #{{ forloop.revcounter }}
+                            </small>
+                        </div>
+
+                        <a href="{% url 'measurement_update' measurement.pk %}"
+                           class='btn btn-sm btn-outline-secondary'>
+                            Edit
+                        </a>
+
+                    </div>
+
+                    <div class='row'>
+
+                        <div class='col-md-4'>
+                            <div class='text-muted small'>
+                                Gravity
+                            </div>
+
+                            <div class='fw-semibold'>
+                                {{ measurement.gravity }}
+                            </div>
+                        </div>
+
+                        <div class='col-md-4'>
+                            <div class='text-muted small'>
+                                Temperature
+                            </div>
+
+                            <div>
+                                {{ measurement.temperature }} °C
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {% if measurement.notes %}
+                    <div class='mt-3'>
+
+                        <div class='text-muted small'>
+                            Notes
+                        </div>
+
+                        <div>
+                            {{ measurement.notes|linebreaks }}
+                        </div>
+
+                    </div>
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p class='text-muted mb-3'>
+                No measurements yet.
+            </p>
+
+        {% endif %}
+
+    </div>
+</div>
 </div>

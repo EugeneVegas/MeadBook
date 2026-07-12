@@ -2,7 +2,11 @@
 
 {% block content %}
 
-<h2>New measurement</h2>
+{% if form.instance.pk %}
+    <h2>Edit measurement</h2>
+{% else %}
+    <h2>New measurement</h2>
+{% endif %}
 
 <form method='post'>
 
@@ -36,7 +40,11 @@
 
     <div class='mt-4 d-flex gap-2'>
         <button class='btn btn-success' type='submit'>
-            Add new
+        {% if form.instance.pk %}
+            Edit
+        {% else %}
+            Add New
+        {% endif %}
         </button>
 
         <a href="{% url 'batch_detail' batch.pk %}" class='btn btn-outline-secondary'>

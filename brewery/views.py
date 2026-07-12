@@ -3,7 +3,8 @@ from django.shortcuts import get_object_or_404
 from django.views.generic import (
     ListView,
     DetailView,
-    CreateView
+    CreateView,
+    UpdateView,
 )
 
 from .models import Batch, Measurement
@@ -30,7 +31,13 @@ class BatchCreateView(CreateView):
     success_url = reverse_lazy('batch_list')
 
 
-class MeasurementCreateView(CreateView):
+class MeasurementSuccessUrlMixin:
+    def get_success_url(self) -> str:
+        return reverse_lazy('batch_detail',
+                            kwargs={'pk': self.object.batch.pk})
+
+
+class MeasurementCreateView(MeasurementSuccessUrlMixin, CreateView):
     model = Measurement
     form_class = MeasurementForm
     template_name = 'brewery/measurement/form.html'
@@ -50,6 +57,13 @@ class MeasurementCreateView(CreateView):
         context['batch'] = self.get_batch()
         return context
 
-    def get_success_url(self) -> str:
-        return reverse_lazy('batch_detail',
-                            kwargs={'pk': self.object.batch.pk})
+
+class MeasurementUpdateView(MeasurementSuccessUrlMixin, UpdateView):
+    model = Measurement
+    form_class = MeasurementForm
+    template_name = 'brewery/measurement/form.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['batch'] = self.object.batch
+        return context

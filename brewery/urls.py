@@ -10,4 +10,7 @@ urlpatterns = [
     path('batch/<int:pk>/measurements/new/',
          views.MeasurementCreateView.as_view(),
          name='measurement_create'),
+    path('measurement/<int:pk>/edit/',
+         views.MeasurementUpdateView.as_view(),
+         name='measurement_update'),
 ]
