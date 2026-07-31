@@ -77,6 +77,11 @@ class MeasurementCreateView(MeasurementSuccessUrlMixin, CreateView):
             pk=self.kwargs['pk'],
         )
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['batch'] = self.get_batch()
+        return kwargs
+
     def form_valid(self, form):
         form.instance.batch = self.get_batch()
         return super().form_valid(form)

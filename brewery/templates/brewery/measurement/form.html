@@ -12,6 +12,12 @@
 
     {% csrf_token %}
 
+    {% if form.non_field_errors %}
+    <div class='alert alert-danger'>
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+
     <div class='row'>
         <div class='col-md-4'>
             {{ form.measured_at.label_tag }}
@@ -19,10 +25,39 @@
             {{ form.measured_at.errors }}
         </div>
 
+         <div class='col-md-4'>
+            {{ form.density.label_tag }}
+            {{ form.density }}
+
+            {% for error in form.density.errors %}
+                <div class='text-danger small'>
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
         <div class='col-md-4'>
-            {{ form.gravity.label_tag }}
-            {{ form.gravity }}
-            {{ form.gravity.errors }}
+            {{ form.unit.label_tag }}
+            {{ form.unit }}
+
+            {% for error in form.unit.errors %}
+                <div class='text-danger small'>
+                    {{ error }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class='col-12'>
+            <div class='form-check'>
+                {{ form.refractometer_correction }}
+                {{ form.refractometer_correction.label_tag }}
+            </div>
+
+            {% for error in form.refractometer_correction.errors %}
+                <div class='text-danger small'>
+                    {{ error }}
+                </div>
+            {% endfor %}
         </div>
 
         <div class='col-md-4'>
