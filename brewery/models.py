@@ -120,8 +120,24 @@ class Measurement(models.Model):
     )
     measured_at = models.DateTimeField()
     gravity = models.DecimalField(
+        "Corrected SG",
+        max_digits=5,
+        decimal_places=3
+    )
+    raw_density = models.DecimalField(
+        "Введенное значение",
         max_digits=5,
         decimal_places=3,
+        null=True,
+        blank=True
+    )
+    unit = models.CharField(
+        "Единица измерения",
+        max_length=4,
+        choices=[('sg', 'SG'), ('brix', 'Brix')],
+        default='sg',
+        null=True,
+        blank=True
     )
     temperature = models.DecimalField(
         max_digits=3,
