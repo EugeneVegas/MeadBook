@@ -26,6 +26,8 @@ class MeasurementAdmin(admin.ModelAdmin):
     list_display = (
         'measured_at',
         'gravity',
+        'raw_density',
+        'unit',
         'temperature',
         'notes'
     )

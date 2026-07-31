@@ -27,13 +27,13 @@
 
         <!-- Компактный объединенный ввод: Плотность + Единица -->
         <div class='col-md-4'>
-            {{ form.density.label_tag }}
+            {{ form.raw_density.label_tag }}
             <div class="input-group">
-                {{ form.density }}
+                {{ form.raw_density }}
                 {{ form.unit }}
             </div>
             
-            {% for error in form.density.errors %}
+            {% for error in form.raw_density.errors %}
                 <div class='text-danger small'>{{ error }}</div>
             {% endfor %}
             {% for error in form.unit.errors %}

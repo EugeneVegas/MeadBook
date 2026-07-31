@@ -59,29 +59,15 @@ class MeasurementForm(forms.ModelForm):
         ('brix', 'Brix'),
     )
 
-    density = forms.DecimalField(
-        label='Density',
-        max_digits=5,
-        decimal_places=3,
-        widget=forms.NumberInput(
-            attrs={'placeholder': '0.000', 'step': '0.001'})
-    )
-    unit = forms.ChoiceField(
-        label='Unit',
-        choices=UNIT_CHOICES,
-        widget=forms.Select()
-    )
-
     class Meta:
         model = Measurement
         fields = (
             'measured_at',
-            'density',
+            'raw_density',
             'unit',
             'temperature',
             'notes',
         )
-
         widgets = {
             'measured_at': DateTimePickerInput(
                 attrs={
@@ -95,19 +81,24 @@ class MeasurementForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if self.instance and self.instance.pk:
-            self.fields['density'].initial = self.instance.gravity
-            self.fields['unit'].initial = 'sg'
+            self.fields['raw_density'].initial = self.instance.raw_density
+            self.fields['unit'].initial = self.instance.unit
+        else:
+            # Дефолтные плейсхолдеры для новых записей
+            self.fields['raw_density'].widget.attrs.update(
+                {'placeholder': '0.000', 'step': '0.001'})
 
         # Стилизация Bootstrap
         for field_name, field in self.fields.items():
             if field_name == 'unit':
                 field.widget.attrs.update({
-                    'class': 'form-select-sm w-auto bg-white border-start-0',
+                    # Возвращаем form-select для правильных отступов и стрелочки
+                    'class': 'form-select form-select-sm w-auto bg-white border-start-0',
                     'style': 'border-color: #dee2e6; '
-                    'transition: border-color .15s ease-in-out, '
-                    'box-shadow .15s ease-in-out;'
+                             'transition: border-color .15s ease-in-out, '
+                             'box-shadow .15s ease-in-out;'
                 })
-            elif field_name == 'density':
+            elif field_name == 'raw_density':
                 field.widget.attrs.update({
                     'class': 'form-control border-end-0'
                 })
@@ -118,48 +109,45 @@ class MeasurementForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        density = cleaned_data.get('density')
+        raw_density = cleaned_data.get('raw_density')
         unit = cleaned_data.get('unit')
 
-        if density is None or unit is None:
+        if raw_density is None or unit is None:
             return cleaned_data
 
         if unit == 'sg':
-            gravity = density
+            # Если ввели SG, то корректировать алкоголь не нужно
+            gravity_float = float(raw_density)
         elif unit == 'brix':
-            gravity_float = self._brix_to_sg(float(density))
-            gravity = Decimal(str(gravity_float))
+            # Рассчитываем истинное SG по формуле Новотного
+            gravity_float = self._brix_to_sg(float(raw_density))
         else:
             raise forms.ValidationError('Unknown density unit.')
 
-        cleaned_data['gravity'] = gravity
+        # Записываем вычисленное значение в cleaned_data для метода save()
+        cleaned_data['gravity'] = Decimal(str(round(gravity_float, 3)))
         return cleaned_data
 
     def save(self, commit=True):
         instance = super().save(commit=False)
+        # Переносим скрытое расчетное значение в модель перед записью
         instance.gravity = self.cleaned_data['gravity']
         if commit:
             instance.save()
         return instance
 
     def _brix_to_sg(self, brix: float) -> float:
-        # Автоматическая проверка: если батч передан
-        # и у него ЕСТЬ начальная плотность (OG)
         if self.batch and self.batch.original_gravity:
-
-            # Нюанс для режима редактирования:
-            # если мы редактируем самый ПЕРВЫЙ замер (OG),
-            # то коррекция алкоголя НЕ должна применяться,
-            # ведь это начальное сусло!
-            if self.instance and \
+            # Если редактируем самый первый замер (OG),
+            # то коррекция алкоголя не нужна
+            if self.instance and self.instance.pk and \
+                    self.batch.earliest_measurement and \
                     self.instance.pk == self.batch.earliest_measurement.pk:
                 return brix_to_sg(brix)
 
-            # Для всех последующих замеров (когда идет ферментация)
-            # применяем формулу Новотного
+            # Для всех последующих замеров применяем формулу Новотного
             og_brix = sg_to_brix(float(self.batch.original_gravity))
             return brix_to_sg_corrected(og_brix, brix)
 
-        # Если это самый первый замер в батче (Day 0),
-        # алкоголя еще нет, просто конвертируем
+        # Если это самый первый замер в батче, алкоголя еще нет
         return brix_to_sg(brix)
