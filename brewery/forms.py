@@ -1,7 +1,12 @@
+from decimal import Decimal
 from django import forms
 
 from .models import Batch, Measurement
-from .utils.unit_conversion import sg_to_brix, brix_to_sg, brix_to_sg_corrected
+from .utils.unit_conversion import (
+    brix_to_sg,
+    brix_to_sg_corrected,
+    sg_to_brix
+)
 
 
 class DatePickerInput(forms.DateInput):
@@ -58,26 +63,21 @@ class MeasurementForm(forms.ModelForm):
         label='Density',
         max_digits=5,
         decimal_places=3,
+        widget=forms.NumberInput(
+            attrs={'placeholder': '0.000', 'step': '0.001'})
     )
-
     unit = forms.ChoiceField(
         label='Unit',
         choices=UNIT_CHOICES,
-    )
-
-    refractometer_correction = forms.BooleanField(
-        label='Refractometer correction',
-        required=False,
+        widget=forms.Select()
     )
 
     class Meta:
         model = Measurement
-
         fields = (
             'measured_at',
             'density',
             'unit',
-            'refractometer_correction',
             'temperature',
             'notes',
         )
@@ -92,80 +92,74 @@ class MeasurementForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         self.batch = kwargs.pop('batch', None)
-
         super().__init__(*args, **kwargs)
 
-        for field in self.fields.values():
-            field.widget.attrs.setdefault('class', 'form-control')
+        if self.instance and self.instance.pk:
+            self.fields['density'].initial = self.instance.gravity
+            self.fields['unit'].initial = 'sg'
 
-        self.fields['refractometer_correction'].widget.attrs.pop(
-            'class',
-            None,
-        )
-        self.fields['refractometer_correction'].widget.attrs[
-            'class'
-        ] = 'form-check-input'
+        # Стилизация Bootstrap
+        for field_name, field in self.fields.items():
+            if field_name == 'unit':
+                field.widget.attrs.update({
+                    'class': 'form-select-sm w-auto bg-white border-start-0',
+                    'style': 'border-color: #dee2e6; '
+                    'transition: border-color .15s ease-in-out, '
+                    'box-shadow .15s ease-in-out;'
+                })
+            elif field_name == 'density':
+                field.widget.attrs.update({
+                    'class': 'form-control border-end-0'
+                })
+            else:
+                field.widget.attrs.setdefault('class', 'form-control')
 
-        self.fields['notes'].widget.attrs.update({
-            'rows': 4,
-        })
+        self.fields['notes'].widget.attrs.update({'rows': 4})
 
     def clean(self):
         cleaned_data = super().clean()
-
         density = cleaned_data.get('density')
         unit = cleaned_data.get('unit')
-        correction = cleaned_data.get('refractometer_correction')
 
         if density is None or unit is None:
             return cleaned_data
 
         if unit == 'sg':
             gravity = density
-
         elif unit == 'brix':
-            gravity = self._brix_to_sg(
-                density,
-                correction=correction,
-            )
-
+            gravity_float = self._brix_to_sg(float(density))
+            gravity = Decimal(str(gravity_float))
         else:
-            raise forms.ValidationError(
-                'Unknown density unit.',
-            )
+            raise forms.ValidationError('Unknown density unit.')
 
         cleaned_data['gravity'] = gravity
-
         return cleaned_data
 
     def save(self, commit=True):
         instance = super().save(commit=False)
-
         instance.gravity = self.cleaned_data['gravity']
-
         if commit:
             instance.save()
-
         return instance
 
-    def _brix_to_sg(self, brix, correction=False):
-        if correction:
-            if self.batch is None:
-                raise forms.ValidationError(
-                    'Batch is required for refractometer correction.',
-                )
+    def _brix_to_sg(self, brix: float) -> float:
+        # Автоматическая проверка: если батч передан
+        # и у него ЕСТЬ начальная плотность (OG)
+        if self.batch and self.batch.original_gravity:
 
-            original_gravity = self.batch.original_gravity
+            # Нюанс для режима редактирования:
+            # если мы редактируем самый ПЕРВЫЙ замер (OG),
+            # то коррекция алкоголя НЕ должна применяться,
+            # ведь это начальное сусло!
+            if self.instance and \
+                    self.instance.pk == self.batch.earliest_measurement.pk:
+                return brix_to_sg(brix)
 
-            if original_gravity is None:
-                raise forms.ValidationError(
-                    'Refractometer correction requires '
-                    'original gravity.',
-                )
+            # Для всех последующих замеров (когда идет ферментация)
+            # применяем формулу Новотного
+            og_brix = sg_to_brix(float(self.batch.original_gravity))
+            return brix_to_sg_corrected(og_brix, brix)
 
-            return brix_to_sg_corrected(
-                sg_to_brix(original_gravity),
-                brix,
-            )
-
+        # Если это самый первый замер в батче (Day 0),
+        # алкоголя еще нет, просто конвертируем
         return brix_to_sg(brix)

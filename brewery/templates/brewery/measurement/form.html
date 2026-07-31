@@ -9,7 +9,6 @@
 {% endif %}
 
 <form method='post'>
-
     {% csrf_token %}
 
     {% if form.non_field_errors %}
@@ -18,48 +17,31 @@
     </div>
     {% endif %}
 
-    <div class='row'>
+    <div class='row g-3'>
+        <!-- Дата измерения -->
         <div class='col-md-4'>
             {{ form.measured_at.label_tag }}
             {{ form.measured_at }}
             {{ form.measured_at.errors }}
         </div>
 
-         <div class='col-md-4'>
-            {{ form.density.label_tag }}
-            {{ form.density }}
-
-            {% for error in form.density.errors %}
-                <div class='text-danger small'>
-                    {{ error }}
-                </div>
-            {% endfor %}
-        </div>
-
+        <!-- Компактный объединенный ввод: Плотность + Единица -->
         <div class='col-md-4'>
-            {{ form.unit.label_tag }}
-            {{ form.unit }}
-
-            {% for error in form.unit.errors %}
-                <div class='text-danger small'>
-                    {{ error }}
-                </div>
-            {% endfor %}
-        </div>
-
-        <div class='col-12'>
-            <div class='form-check'>
-                {{ form.refractometer_correction }}
-                {{ form.refractometer_correction.label_tag }}
+            {{ form.density.label_tag }}
+            <div class="input-group">
+                {{ form.density }}
+                {{ form.unit }}
             </div>
-
-            {% for error in form.refractometer_correction.errors %}
-                <div class='text-danger small'>
-                    {{ error }}
-                </div>
+            
+            {% for error in form.density.errors %}
+                <div class='text-danger small'>{{ error }}</div>
+            {% endfor %}
+            {% for error in form.unit.errors %}
+                <div class='text-danger small'>{{ error }}</div>
             {% endfor %}
         </div>
 
+        <!-- Температура -->
         <div class='col-md-4'>
             {{ form.temperature.label_tag }}
             {{ form.temperature }}
@@ -67,12 +49,14 @@
         </div>
     </div>
 
+    <!-- Заметки -->
     <div class='mt-3'>
         {{ form.notes.label_tag }}
         {{ form.notes }}
         {{ form.notes.errors }}
     </div>
 
+    <!-- Кнопки управления -->
     <div class='mt-4 d-flex gap-2'>
         <button class='btn btn-success' type='submit'>
         {% if form.instance.pk %}

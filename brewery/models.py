@@ -2,6 +2,11 @@ from django.db import models
 from enum import StrEnum
 from django.utils import timezone
 from decimal import Decimal
+from brewery.utils.unit_conversion import (
+    sg_to_brix, brix_to_sg_corrected,
+    calculate_abv,
+    calculate_attenuation
+)
 
 
 class BatchStatus(StrEnum):
@@ -86,6 +91,26 @@ class Batch(models.Model):
             return BatchStatus.FERMENTING
         return BatchStatus.CONDITIONING
 
+    @property
+    def abv(self) -> Decimal | None:
+        og = self.original_gravity
+        cg = self.current_gravity
+
+        if og is None or cg is None:
+            return None
+
+        return Decimal(str(calculate_abv(float(og), float(cg))))
+
+    @property
+    def apparent_attenuation(self) -> Decimal | None:
+        og = self.original_gravity
+        cg = self.current_gravity
+
+        if og is None or cg is None:
+            return None
+
+        return Decimal(str(calculate_attenuation(float(og), float(cg))))
+
 
 class Measurement(models.Model):
     batch = models.ForeignKey(
@@ -115,3 +140,11 @@ class Measurement(models.Model):
             f'{self.gravity} '
             f'({self.measured_at:%d.%m.%Y})'
         )
+
+    @property
+    def brix(self) -> Decimal:
+        """Dynamically calculates the Brix equivalent of this SG reading."""
+        if self.gravity is None:
+            return Decimal('0.0')
+        float_brix = sg_to_brix(float(self.gravity))
+        return Decimal(str(float_brix))

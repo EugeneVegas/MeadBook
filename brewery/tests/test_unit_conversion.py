@@ -1,6 +1,7 @@
 from django.test import SimpleTestCase
 from brewery.utils.unit_conversion import (
-    sg_to_brix, brix_to_sg, brix_to_sg_corrected
+    sg_to_brix, brix_to_sg, brix_to_sg_corrected,
+    calculate_abv, calculate_attenuation
 )
 
 
@@ -57,3 +58,19 @@ class UnitConversionTestCase(SimpleTestCase):
             with self.subTest(og=og, curr=curr, wcf=wcf):
                 self.assertAlmostEqual(
                     brix_to_sg_corrected(og, curr, wcf), expected)
+
+    def test_calculate_abv(self):
+        """Test ABV calculations with different gravity drops."""
+        # 1.101 to 1.057 drop
+        self.assertAlmostEqual(calculate_abv(1.101, 1.057), 5.78, places=2)
+        # 1.101 to 1.006 drop
+        self.assertAlmostEqual(calculate_abv(1.101, 1.006), 12.47, places=2)
+
+    def test_calculate_attenuation(self):
+        """Test sugar attenuation percentage points."""
+        # 1.101 to 1.057 drop
+        self.assertAlmostEqual(calculate_attenuation(
+            1.101, 1.057), 43.6, places=1)
+        # 1.101 to 1.006 drop
+        self.assertAlmostEqual(calculate_attenuation(
+            1.101, 1.006), 94.1, places=1)

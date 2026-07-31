@@ -97,6 +97,10 @@ class MeasurementUpdateView(MeasurementSuccessUrlMixin, UpdateView):
     form_class = MeasurementForm
     template_name = 'brewery/measurement/form.html'
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        return kwargs
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['batch'] = self.object.batch
