@@ -8,16 +8,5 @@
     {% include 'brewery/batch/partials/_measurements_card.html' %}
     {% include 'brewery/batch/partials/_bottles_card.html' %}
     {% include 'brewery/batch/partials/_history_card.html' %}
-    <div class='col-12'>
-        <div class='d-flex gap-2'>
-            <a href="{% url 'batch_update' batch.pk %}" class='btn btn-outline-secondary'>
-                Edit
-            </a>
-
-            <a href="{% url 'batch_list' %}" class='btn btn-outline-secondary'>
-                Back
-            </a>
-        </div>
-    </div>
 </div>
 {% endblock %}
