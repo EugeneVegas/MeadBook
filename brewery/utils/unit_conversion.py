@@ -13,6 +13,7 @@ def brix_to_sg(value: float) -> float:
 def brix_to_sg_corrected(og_brix: float, current_brix: float,
                          wcf: float = 1.0) -> float:
     # Peter Novotný
+    # https://www.diversity.beer/2017/01/pocitame-nova-korekce-refraktometru.html
     fg = -0.002349 * (og_brix / wcf) + 0.006276 * (current_brix / wcf) + 1
     return round(fg, 3)
 

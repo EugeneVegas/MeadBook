@@ -71,4 +71,44 @@
         </a>
     </div>
 </form>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const unitSelect = document.getElementById('{{ form.unit.id_for_label }}');
+        const densityInput = document.getElementById('{{ form.raw_density.id_for_label }}');
+
+        function adjustInputSettings() {
+            const val = parseFloat(densityInput.value);
+
+            if (unitSelect.value === 'sg') {
+                // Настройки для ареометра (SG)
+                densityInput.setAttribute('step', '0.001');
+                densityInput.setAttribute('placeholder', '1.000');
+                densityInput.setAttribute('min', '0.900');
+                densityInput.setAttribute('max', '1.500');
+                
+                // Если число уже введено, красиво приводим к 3 знакам (например, 1.04 -> 1.040)
+                if (!isNaN(val)) {
+                    densityInput.value = val.toFixed(3);
+                }
+            } else if (unitSelect.value === 'brix') {
+                // Настройки для рефрактометра (Brix)
+                densityInput.setAttribute('step', '0.1'); // Шаг 0.1 для точности, но можно поставить и 0.5
+                densityInput.setAttribute('placeholder', '0.0');
+                densityInput.setAttribute('min', '0.0');
+                densityInput.setAttribute('max', '100.0');
+                
+                // Срезаем лишние знаки до 1 знака после запятой (например, 24.000 -> 24.0)
+                if (!isNaN(val)) {
+                    densityInput.value = val.toFixed(1);
+                }
+            }
+        }
+
+        // Слушаем переключение селектора
+        unitSelect.addEventListener('change', adjustInputSettings);
+        
+        // Запускаем один раз при загрузке страницы (важно для UpdateView, чтобы подрезать старые нули из базы)
+        adjustInputSettings();
+    });
+</script>
 {% endblock %}

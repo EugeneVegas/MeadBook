@@ -99,6 +99,7 @@ class MeasurementUpdateView(MeasurementSuccessUrlMixin, UpdateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
+        kwargs['batch'] = self.object.batch
         return kwargs
 
     def get_context_data(self, **kwargs):
